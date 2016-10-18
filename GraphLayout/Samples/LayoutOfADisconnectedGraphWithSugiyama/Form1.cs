@@ -14,9 +14,12 @@ using Label = Microsoft.Msagl.Core.Layout.Label;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace LayoutOfADisconnectedGraphWithSugiyama {
-    public partial class Form1 : Form {
-        public Form1() {
+namespace LayoutOfADisconnectedGraphWithSugiyama
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
 #if DEBUG
             DisplayGeometryGraph.SetShowFunctions();
 #endif
@@ -25,7 +28,8 @@ namespace LayoutOfADisconnectedGraphWithSugiyama {
             SetGraph();
         }
 
-        private void SetGraph() {
+        private void SetGraph()
+        {
             var graph = new Graph();
             graph.AddEdge("a", "b");
             graph.AddEdge("e", "b");
@@ -52,31 +56,34 @@ namespace LayoutOfADisconnectedGraphWithSugiyama {
             foreach (Node node in graph.Nodes)
                 node.GeometryNode.BoundaryCurve = CreateLabelAndBoundary(node);
 
-            foreach (var edge in graph.Edges) {
-                if (edge.Label != null) {
+            foreach (var edge in graph.Edges)
+            {
+                if (edge.Label != null)
+                {
                     var geomEdge = edge.GeometryEdge;
                     double width;
                     double height;
                     StringMeasure.MeasureWithFont(edge.LabelText,
                                                   new Font(edge.Label.FontName, (float)edge.Label.FontSize), out width, out height);
-                    edge.Label.GeometryLabel=geomEdge.Label = new Label(width, height, geomEdge);                    
+                    edge.Label.GeometryLabel = geomEdge.Label = new Label(width, height, geomEdge);
                 }
 
             }
 
-            var geomGraph=graph.GeometryGraph;
+            var geomGraph = graph.GeometryGraph;
 
             var geomGraphComponents = GraphConnectedComponents.CreateComponents(geomGraph.Nodes, geomGraph.Edges);
             var settings = new SugiyamaLayoutSettings();
-            foreach (var subgraph in geomGraphComponents) {
-               
-                var layout=new LayeredLayout(subgraph, settings);
-                subgraph.Margins = settings.NodeSeparation/2;
+            foreach (var subgraph in geomGraphComponents)
+            {
+
+                var layout = new LayeredLayout(subgraph, settings);
+                subgraph.Margins = settings.NodeSeparation / 2;
                 layout.Run();
 
             }
 
-           Microsoft.Msagl.Layout.MDS.MdsGraphLayout.PackGraphs(geomGraphComponents, settings);
+            Microsoft.Msagl.Layout.MDS.MdsGraphLayout.PackGraphs(geomGraphComponents, settings);
 
             geomGraph.UpdateBoundingBox();
 
@@ -86,7 +93,8 @@ namespace LayoutOfADisconnectedGraphWithSugiyama {
 
         }
 
-        static ICurve CreateLabelAndBoundary(Node node) {
+        static ICurve CreateLabelAndBoundary(Node node)
+        {
             node.Attr.Shape = Shape.DrawFromGeometry;
             node.Attr.LabelMargin *= 2;
             double width;

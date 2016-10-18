@@ -36,11 +36,14 @@ using System.IO;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 
-namespace Microsoft.Msagl.GraphViewerGdi {
-    internal partial class SaveViewAsImageForm : Form {
+namespace Microsoft.Msagl.GraphViewerGdi
+{
+    internal partial class SaveViewAsImageForm : Form
+    {
         readonly GViewer gViewer;
 
-        internal SaveViewAsImageForm(GViewer gViewerControl) {
+        internal SaveViewAsImageForm(GViewer gViewerControl)
+        {
             InitializeComponent();
             saveCurrentView.Checked = gViewerControl.SaveCurrentViewInImage;
             saveTotalView.Checked = !gViewerControl.SaveCurrentViewInImage;
@@ -50,62 +53,72 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             imageScale.TickFrequency = 5;
             imageScale.Minimum = 10;
             imageScale.Maximum = 100;
-            imageScale.Value = imageScale.Minimum;      
+            imageScale.Value = imageScale.Minimum;
             SetScaleLabelTexts();
             imageScale.ValueChanged += imageScale_ValueChanged;
             saveCurrentView.CheckedChanged += saveCurrentView_CheckedChanged;
-            toolTip.SetToolTip(saveInTextBox, "The default file format is JPG");
+            toolTip.SetToolTip(saveInTextBox, "فرمت پیش فرض JPG است");
             saveInTextBox.Text = "*.jpg";
         }
 
 
-        double ImageScale {
-            get {
+        double ImageScale
+        {
+            get
+            {
                 double span = imageScale.Maximum - imageScale.Minimum;
-                double l = (imageScale.Value - imageScale.Minimum)/span;
-                return 1.0 + l*9;
+                double l = (imageScale.Value - imageScale.Minimum) / span;
+                return 1.0 + l * 9;
             }
         }
 
-        string FileName {
+        string FileName
+        {
             get { return saveInTextBox.Text; }
         }
 
-        void saveCurrentView_CheckedChanged(object sender, EventArgs e) {
+        void saveCurrentView_CheckedChanged(object sender, EventArgs e)
+        {
             SetScaleLabelTexts();
             gViewer.SaveCurrentViewInImage = saveCurrentView.Checked;
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
             MessageId = "System.String.Format(System.String,System.Object)")]
-        void imageScale_ValueChanged(object sender, EventArgs e) {
+        void imageScale_ValueChanged(object sender, EventArgs e)
+        {
             toolTip.SetToolTip(imageScale, String.Format("Image scale is {0}", ImageScale));
             SetScaleLabelTexts();
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
             MessageId = "System.String.Format(System.String,System.Object,System.Object)")]
-        void SetScaleLabelTexts() {
+        void SetScaleLabelTexts()
+        {
             int w, h;
 
-            if (saveTotalView.Checked) {
-                w = (int) Math.Ceiling(gViewer.Graph.Width*ImageScale);
-                h = (int) Math.Ceiling(gViewer.Graph.Height*ImageScale);
+            if (saveTotalView.Checked)
+            {
+                w = (int)Math.Ceiling(gViewer.Graph.Width * ImageScale);
+                h = (int)Math.Ceiling(gViewer.Graph.Height * ImageScale);
             }
-            else {
-                w = (int) (gViewer.SrcRect.Width*ImageScale);
-                h = (int) (gViewer.SrcRect.Height*ImageScale);
+            else
+            {
+                w = (int)(gViewer.SrcRect.Width * ImageScale);
+                h = (int)(gViewer.SrcRect.Height * ImageScale);
             }
-            imageSizeLabel.Text = String.Format("Image size : {0} x {1}", w, h);
+            imageSizeLabel.Text = String.Format("سایز عکس : {0} در {1}", w, h);
         }
 
-        void browseButton_Click(object sender, EventArgs e) {
+        void browseButton_Click(object sender, EventArgs e)
+        {
             var saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter =
                 "JPG Files(*.JPG)|*.JPG|BMP Files(*.BMP)|*.BMP|GIF Files(*.GIF)|*.GIF|Png Files(*.Png)|*.Png|SVG files(*.svg)|*.SVG";
             saveFileDialog.OverwritePrompt = false;
             DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if (dialogResult == DialogResult.OK) {
+            if (dialogResult == DialogResult.OK)
+            {
                 saveInTextBox.Text = saveFileDialog.FileName;
                 okButton.Focus(); //to enable hitting the OK button
             }
@@ -115,30 +128,36 @@ namespace Microsoft.Msagl.GraphViewerGdi {
          SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions"),
          SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters",
              MessageId = "System.Windows.Forms.MessageBox.Show(System.String)")]
-        void OkButtonClick(object sender, EventArgs e) {
-            if (String.IsNullOrEmpty(saveInTextBox.Text)) {
-                MessageBox.Show("File name is not set");
+        void OkButtonClick(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(saveInTextBox.Text))
+            {
+                MessageBox.Show("نام فایل مشخص نشده است");
                 return;
             }
 
             Cursor c = Cursor;
             Cursor = Cursors.WaitCursor;
-            try {
+            try
+            {
                 int w, h;
-                if (saveCurrentView.Checked) {
-                    w = (int) Math.Ceiling(gViewer.SrcRect.Width*ImageScale);
-                    h = (int) Math.Ceiling(gViewer.SrcRect.Height*ImageScale);
+                if (saveCurrentView.Checked)
+                {
+                    w = (int)Math.Ceiling(gViewer.SrcRect.Width * ImageScale);
+                    h = (int)Math.Ceiling(gViewer.SrcRect.Height * ImageScale);
                 }
-                else {
-                    w = (int) Math.Ceiling(gViewer.Graph.Width*ImageScale);
-                    h = (int) Math.Ceiling(gViewer.Graph.Height*ImageScale);
+                else
+                {
+                    w = (int)Math.Ceiling(gViewer.Graph.Width * ImageScale);
+                    h = (int)Math.Ceiling(gViewer.Graph.Height * ImageScale);
                 }
 
                 Bitmap bitmap = null;
                 string ext = GetFileNameExtension();
                 if (ext == ".EMF" || ext == ".WMF") DrawVectorGraphics(w, h);
                 else if (ext == ".SVG") SvgGraphWriter.Write(gViewer.Graph, FileName, null, null, 4);
-                else {
+                else
+                {
                     bitmap = new Bitmap(w, h, PixelFormat.Format32bppPArgb);
                     using (Graphics graphics = Graphics.FromImage(bitmap))
                         DrawGeneral(w, h, graphics);
@@ -148,8 +167,9 @@ namespace Microsoft.Msagl.GraphViewerGdi {
                 if (bitmap != null)
                     bitmap.Save(saveInTextBox.Text);
             }
-            catch (Exception ex) {
-                MessageBox.Show("Cannot save the image: " + ex.Message);
+            catch (Exception ex)
+            {
+                MessageBox.Show("قادر به ذخیره عکس نمی باشیم: " + ex.Message);
                 Cursor = c;
                 return;
             }
@@ -157,7 +177,8 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             Close();
         }
 
-        void DrawGeneral(int w, int h, Graphics graphics) {
+        void DrawGeneral(int w, int h, Graphics graphics)
+        {
             graphics.SmoothingMode = SmoothingMode.HighQuality;
             graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             graphics.CompositingQuality = CompositingQuality.HighQuality;
@@ -168,7 +189,8 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             else DrawAll(w, h, graphics);
         }
 
-        void DrawAll(int w, int h, Graphics graphics) {
+        void DrawAll(int w, int h, Graphics graphics)
+        {
             //fill the whole image
             graphics.FillRectangle(new SolidBrush(Draw.MsaglColorToDrawingColor(gViewer.Graph.Attr.BackgroundColor)),
                                    new RectangleF(0, 0, w, h));
@@ -176,14 +198,15 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             //calculate the transform
             double s = ImageScale;
             Graph g = gViewer.Graph;
-            double x = 0.5*w - s*(g.Left + 0.5*g.Width);
-            double y = 0.5*h + s*(g.Bottom + 0.5*g.Height);
+            double x = 0.5 * w - s * (g.Left + 0.5 * g.Width);
+            double y = 0.5 * h + s * (g.Bottom + 0.5 * g.Height);
 
-            graphics.Transform = new Matrix((float) s, 0, 0, (float) -s, (float) x, (float) y);
+            graphics.Transform = new Matrix((float)s, 0, 0, (float)-s, (float)x, (float)y);
             Draw.DrawPrecalculatedLayoutObject(graphics, gViewer.DGraph);
         }
 
-        void DrawCurrent(Graphics graphics) {
+        void DrawCurrent(Graphics graphics)
+        {
             graphics.Transform = gViewer.CurrentTransform();
             graphics.FillRectangle(new SolidBrush(Draw.MsaglColorToDrawingColor(gViewer.Graph.Attr.BackgroundColor)),
                                    gViewer.SrcRect);
@@ -191,7 +214,8 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             Draw.DrawPrecalculatedLayoutObject(graphics, gViewer.DGraph);
         }
 
-        void DrawVectorGraphics(int w, int h) {
+        void DrawVectorGraphics(int w, int h)
+        {
             Graphics graphics = CreateGraphics();
             IntPtr ipHdc = graphics.GetHdc();
 
@@ -221,10 +245,12 @@ namespace Microsoft.Msagl.GraphViewerGdi {
 
 
         [SuppressMessage("Microsoft.Globalization", "CA1304:SpecifyCultureInfo", MessageId = "System.String.ToLower")]
-        void AdjustFileName() {
+        void AdjustFileName()
+        {
             string ext = GetFileNameExtension();
             if (ext == ".BMP" || ext == ".JPG" || ext == ".GIF" || ext == ".EMF" || ext == ".PNG" || ext == ".WMF" ||
-                ext == ".SVG") {
+                ext == ".SVG")
+            {
                 //do nothing
             }
             else
@@ -232,11 +258,13 @@ namespace Microsoft.Msagl.GraphViewerGdi {
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1304:SpecifyCultureInfo", MessageId = "System.String.ToUpper")]
-        string GetFileNameExtension() {
+        string GetFileNameExtension()
+        {
             return Path.GetExtension(FileName).ToUpper();
         }
 
-        void cancelButton_Click(object sender, EventArgs e) {
+        void cancelButton_Click(object sender, EventArgs e)
+        {
             Close();
         }
     }

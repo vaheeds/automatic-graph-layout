@@ -53,6 +53,7 @@ namespace Microsoft.Msagl.GraphViewerGdi {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SaveViewAsImageForm));
             this.saveInTextBox = new System.Windows.Forms.TextBox();
             this.saveInLabel = new System.Windows.Forms.Label();
             this.browseButton = new System.Windows.Forms.Button();
@@ -68,27 +69,27 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             // 
             // saveInTextBox
             // 
-            this.saveInTextBox.Location = new System.Drawing.Point(63, 22);
+            this.saveInTextBox.Location = new System.Drawing.Point(64, 23);
             this.saveInTextBox.Name = "saveInTextBox";
-            this.saveInTextBox.Size = new System.Drawing.Size(100, 20);
+            this.saveInTextBox.Size = new System.Drawing.Size(150, 21);
             this.saveInTextBox.TabIndex = 0;
             // 
             // saveInLabel
             // 
             this.saveInLabel.AutoSize = true;
-            this.saveInLabel.Location = new System.Drawing.Point(13, 28);
+            this.saveInLabel.Location = new System.Drawing.Point(8, 27);
             this.saveInLabel.Name = "saveInLabel";
-            this.saveInLabel.Size = new System.Drawing.Size(46, 13);
+            this.saveInLabel.Size = new System.Drawing.Size(52, 13);
             this.saveInLabel.TabIndex = 1;
-            this.saveInLabel.Text = "Save in:";
+            this.saveInLabel.Text = "ذخیره در :";
             // 
             // browseButton
             // 
-            this.browseButton.Location = new System.Drawing.Point(169, 22);
+            this.browseButton.Location = new System.Drawing.Point(220, 22);
             this.browseButton.Name = "browseButton";
-            this.browseButton.Size = new System.Drawing.Size(75, 23);
+            this.browseButton.Size = new System.Drawing.Size(60, 23);
             this.browseButton.TabIndex = 2;
-            this.browseButton.Text = "Browse";
+            this.browseButton.Text = "...";
             this.browseButton.UseVisualStyleBackColor = true;
             this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
             // 
@@ -97,10 +98,10 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             this.saveCurrentView.AutoSize = true;
             this.saveCurrentView.Location = new System.Drawing.Point(25, 74);
             this.saveCurrentView.Name = "saveCurrentView";
-            this.saveCurrentView.Size = new System.Drawing.Size(111, 17);
+            this.saveCurrentView.Size = new System.Drawing.Size(106, 17);
             this.saveCurrentView.TabIndex = 3;
             this.saveCurrentView.TabStop = true;
-            this.saveCurrentView.Text = "Save current view";
+            this.saveCurrentView.Text = "ذخیره نمای فعلی";
             this.saveCurrentView.UseVisualStyleBackColor = true;
             // 
             // saveTotalView
@@ -108,10 +109,10 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             this.saveTotalView.AutoSize = true;
             this.saveTotalView.Location = new System.Drawing.Point(25, 98);
             this.saveTotalView.Name = "saveTotalView";
-            this.saveTotalView.Size = new System.Drawing.Size(106, 17);
+            this.saveTotalView.Size = new System.Drawing.Size(121, 17);
             this.saveTotalView.TabIndex = 4;
             this.saveTotalView.TabStop = true;
-            this.saveTotalView.Text = "Save global view";
+            this.saveTotalView.Text = "ذخیره نمای کـــــلــی";
             this.saveTotalView.UseVisualStyleBackColor = true;
             // 
             // imageScale
@@ -124,14 +125,14 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             this.imageScale.TabIndex = 5;
             this.imageScale.Value = 1;
             // 
-            // imageResolutionLabel
+            // imageSizeLabel
             // 
             this.imageSizeLabel.AutoSize = true;
             this.imageSizeLabel.Location = new System.Drawing.Point(126, 156);
-            this.imageSizeLabel.Name = "imageResolutionLabel";
+            this.imageSizeLabel.Name = "imageSizeLabel";
             this.imageSizeLabel.Size = new System.Drawing.Size(59, 13);
             this.imageSizeLabel.TabIndex = 6;
-            this.imageSizeLabel.Text = "Image Size";
+            this.imageSizeLabel.Text = "سایز عکس";
             // 
             // okButton
             // 
@@ -139,7 +140,7 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 7;
-            this.okButton.Text = "OK";
+            this.okButton.Text = "تایید";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.OkButtonClick);
             // 
@@ -149,11 +150,11 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 8;
-            this.cancelButton.Text = "Cancel";
+            this.cancelButton.Text = "انصراف";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // SaveViewForm
+            // SaveViewAsImageForm
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -168,8 +169,15 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             this.Controls.Add(this.browseButton);
             this.Controls.Add(this.saveInLabel);
             this.Controls.Add(this.saveInTextBox);
-            this.Name = "SaveViewForm";
-            this.Text = "Save as image";
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "SaveViewAsImageForm";
+            this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.RightToLeftLayout = true;
+            this.Text = "ذخیره به عنوان عکس";
             ((System.ComponentModel.ISupportInitialize)(this.imageScale)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
